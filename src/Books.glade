@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.1 -->
+<interface>
+  <requires lib="gtk+" version="3.22"/>
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="lower">2009</property>
+    <property name="upper">2030</property>
+    <property name="value">2009</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkWindow" id="mainwindow">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-find</property>
+    <child>
+      <object class="GtkFixed" id="fixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkMenuBar" id="mainmenubar">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-end">339</property>
+            <child>
+              <object class="GtkMenuItem" id="bookmenu">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Books</property>
+                <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="newbookmenuitem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Insert a new book into
+the database</property>
+                        <property name="label" translatable="yes">New Book...</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="savetofilemenuitem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Save DB to textfile...</property>
+                        <property name="use-underline">True</property>
+                        <signal name="activate" handler="on_savetofilemenuitem_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="exit">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Exit program</property>
+                        <property name="label" translatable="yes">Exit</property>
+                        <signal name="activate" handler="on_exit_activate" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="editmenu">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Edit</property>
+                <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="editmenuitem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Edit selected book-element</property>
+                        <property name="label" translatable="yes">Edit selected...</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="showmenu">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">show</property>
+                <property name="use-underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="helpmenu">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Help</property>
+                <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="about">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">About MyBooks:
+Mybooks was written by
+Torsten Torell in 2020,
+mostly  to learn  a little
+about GTK-programming 
+with Glade and SQLITE-datases.</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="titellabel">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">My books and soundbooks</property>
+            <property name="justify">center</property>
+            <attributes>
+              <attribute name="font-desc" value="Purisa Bold 10"/>
+              <attribute name="weight" value="ultrabold"/>
+              <attribute name="scale" value="2"/>
+              <attribute name="foreground" value="#555557575353"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">54</property>
+            <property name="y">39</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="searchbutton">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="is-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_searchbutton_clicked" swapped="no"/>
+            <child>
+              <object class="GtkImage" id="search">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Search in the database</property>
+                <property name="pixel-size">48</property>
+                <property name="icon-name">edit-find</property>
+                <property name="icon_size">5</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">315</property>
+            <property name="y">140</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="title">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">30</property>
+            <property name="max-width-chars">100</property>
+            <property name="primary-icon-stock">gtk-edit</property>
+            <property name="primary-icon-tooltip-text" translatable="yes">Enter book title</property>
+            <property name="placeholder-text" translatable="yes">&lt;book title&gt;</property>
+            <signal name="changed" handler="on_title_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">53</property>
+            <property name="y">142</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="author">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">30</property>
+            <property name="max-width-chars">100</property>
+            <property name="primary-icon-stock">gtk-edit</property>
+            <property name="primary-icon-tooltip-text" translatable="yes">Enter author's name</property>
+            <property name="placeholder-text" translatable="yes">&lt;author&gt;</property>
+            <signal name="changed" handler="on_author_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">53</property>
+            <property name="y">185</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow">
+            <property name="width-request">923</property>
+            <property name="height-request">504</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Content selected from the datbase</property>
+            <property name="hscrollbar-policy">never</property>
+            <property name="shadow-type">in</property>
+            <property name="propagate-natural-width">True</property>
+            <child>
+              <object class="GtkTreeView" id="treeview">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection" id="select">
+                    <signal name="changed" handler="on" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">5</property>
+            <property name="y">246</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="yearspinbutton">
+            <property name="width-request">148</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="has-focus">True</property>
+            <property name="is-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Year when the book was read</property>
+            <property name="margin-bottom">2</property>
+            <property name="max-width-chars">10</property>
+            <property name="caps-lock-warning">False</property>
+            <property name="primary-icon-stock">gtk-edit</property>
+            <property name="placeholder-text" translatable="yes">&lt;read year&gt;</property>
+            <property name="input-purpose">digits</property>
+            <property name="adjustment">adjustment1</property>
+            <property name="climb-rate">1</property>
+            <property name="snap-to-ticks">True</property>
+            <property name="numeric">True</property>
+            <property name="wrap">True</property>
+            <property name="value">2009</property>
+            <signal name="change-value" handler="on_yearspinbutton_change_value" swapped="no"/>
+            <signal name="value-changed" handler="on_yearspinbutton_value_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">423</property>
+            <property name="y">183</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="yearcheckbutton">
+            <property name="label" translatable="yes">Read year</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="draw-indicator">True</property>
+            <signal name="toggled" handler="on_yearcheckbutton_toggled" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">425</property>
+            <property name="y">162</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

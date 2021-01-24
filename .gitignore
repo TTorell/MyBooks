@@ -1,0 +1,12 @@
+*.[ao]
+.cproject
+.project
+.settings
+.tracecompass/
+.vs
+Debug/
+Release/
+build/
+test/
+src/out/
+*~
