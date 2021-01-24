@@ -19,11 +19,15 @@ It contains a GUI-class and a DB-class which someone could take
 If anyone ever cares to make it build in their environment:
 First you must install glade, gtkmm3.0, gtk+3.0, sqlite3, and maybe some more,
 on your system. It runs on linux, but requieres a lot of include-paths, libs
-etc. It's probably easiest to use the pkg-config command to find reuired paths, flags and libs. Not sure if it is complete, but something like:
+etc. It's probably easiest to use the pkg-config command to find reuired paths,
+flags and libs. Not sure if it is complete, but something like:
 > pkg-config --cflags --libs gtk+-3.0 gtkmm-3.0 sqlite3
 Maybe I'll provide a cmake file to build it with, later.
 For now I use eclipse on Ubuntu.
 I think it requires c++17 (or later) because of some "std::filesystem::path
-thing" I used.
+thing" I used. Yoy'll have to change some file paths in MyBooks.cpp too.
 
+I chose a Gnu LGPL (Lesser) license just beacuse Gtk, Glade and Gtkmm are
+resealsed under it. SQLite3 is in the public domain and does not require a
+license.
 
