@@ -1,7 +1,7 @@
 /*
  * Books.cpp
  *
- *  Created on: 5 juni 2020
+ *  Created on: 5 june 2020
  *      Author: torsten
  */
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
   cout << (stop - start) << " us" << endl;
   //cout << CLOCKS_PER_SEC << endl;
 
-  // Fill DB from textfile.
+  // Fill DB from text file.
   db.fill_db_from_file(books_textfile);
 
   // Create gui.
