@@ -19,51 +19,51 @@
 
 #include "Gui.hpp"
 #include "DataBase.hpp"
-extern "C" {
+extern "C"
+{
 #include <time.h>
 }
 namespace fs = std::filesystem;
-using namespace std;
 
 using namespace MyBooks;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   clock_t start, stop;
-  string books_textfile = "/home/torsten/Documents/Ljudböcker/Böcker_och_ljudböcker.txt";
-  string logfile = "/home/torsten/Documents/Ljudböcker/MyBooks_log.txt";
-  string gladefile = "/home/torsten/eclipse-workspace/MyBooks/src/Books.glade";
-  error_code error;
+  std::string books_textfile = "/home/torsten/Documents/Ljudböcker/Böcker_och_ljudböcker.txt";
+  std::string logfile = "/home/torsten/Documents/Ljudböcker/MyBooks_log.txt";
+  std::string gladefile = "/home/torsten/eclipse-workspace/MyBooks/src/Books.glade";
+  std::error_code error;
 
   start = clock();
   // Create an SQlite directory in users home directory if it doesn't exist.
   // We'll put the database file there if we must create a new DB.
-  char *val = getenv("HOME");
+  char* val = getenv("HOME");
   if (val == NULL)
   {
-    cerr << "Couldn't read environment variable HOME." << endl;
+    std::cerr << "Couldn't read environment variable HOME." << std::endl;
     return -1;
   }
-  string home = val;
+  std::string home = val;
 
   fs::path db_dir(home + "/SQlite");
   if (!fs::exists(db_dir))
     if (!fs::create_directories(db_dir, error))
-      cerr << "Couldn't create database directory: " << db_dir << " " << error.message() << endl;
+      std::cerr << "Couldn't create database directory: " << db_dir << " " << error.message() << std::endl;
 
   // Create new, or open existing, database "MyBooks.db" in "$HOME/SQlite/".
   DataBase db;
   int status = db.open_database(db_dir / "MyBooks.db");
   if (status)
   {
-    cerr << "Couldn't open database " << endl;
+    std::cerr << "Couldn't open database " << std::endl;
     return -1;
   }
 
   stop = clock();
-  cout << (stop - start) << " us" << endl;
-  //cout << CLOCKS_PER_SEC << endl;
+  std::cout << (stop - start) << " us" << std::endl;
+  //std::cout << CLOCKS_PER_SEC << std::endl;
 
   // Fill DB from text file.
   db.fill_db_from_file(books_textfile);
@@ -81,28 +81,28 @@ int main(int argc, char *argv[])
   {
     builder->add_from_file(gladefile);
   }
-  catch (const Glib::FileError &ex)
+  catch (const Glib::FileError& ex)
   {
-    cerr << "FileError: " << ex.what() << std::endl;
+    std::cerr << "FileError: " << ex.what() << std::endl;
     return 1;
   }
-  catch (const Glib::MarkupError &ex)
+  catch (const Glib::MarkupError& ex)
   {
-    cerr << "MarkupError: " << ex.what() << std::endl;
+    std::cerr << "MarkupError: " << ex.what() << std::endl;
     return 1;
   }
-  catch (const Gtk::BuilderError &ex)
+  catch (const Gtk::BuilderError& ex)
   {
-    cerr << "BuilderError: " << ex.what() << std::endl;
+    std::cerr << "BuilderError: " << ex.what() << std::endl;
     return 1;
   }
 
-  Gui *gui = NULL;
+  Gui* gui = NULL;
   builder->get_widget_derived("mainwindow", gui, db, logfile);
 
   if (gui)
   {
-    // cout << gui->choose_database_dir() << endl;
+    // std::cout << gui->choose_database_dir() << std::endl;
 
     app->run(*gui, argc, argv);
     // or just app->run(*gui);

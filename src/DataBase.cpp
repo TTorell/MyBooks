@@ -15,9 +15,9 @@ namespace
 
 // My database is UTF-8 encoded.
 // So we need a convert-function
-string iso_8859_1_to_utf8(string &str)
+std::string iso_8859_1_to_utf8(std::string &str)
 {
-  string str_out;
+  std::string str_out;
   for (uint8_t ch : str)
   {
     if (ch < 0x80)
@@ -33,24 +33,24 @@ string iso_8859_1_to_utf8(string &str)
   return str_out;
 }
 
-string iso_8859_1_to_utf8(const char *c_string)
+std::string iso_8859_1_to_utf8(const char *c_string)
 {
-  string str_out(c_string);
+  std::string str_out(c_string);
   return iso_8859_1_to_utf8(str_out);
 }
 
 // match a regular expression in a string
-bool regexp_match(const string &s, const string &regexp_string)
+bool regexp_match(const std::string &s, const std::string &regexp_string)
 {
-  smatch m;
-  regex r(regexp_string);
-  return (regex_match(s, m, r));
+  std::smatch m;
+  std::regex r(regexp_string);
+  return (std::regex_match(s, m, r));
 }
 
 // replace TAB-characters with one space-character
-string replace_tab_with_space(const string &s)
+std::string replace_tab_with_space(const std::string &s)
 {
-  return regex_replace(s, regex("\\t"), string(" "));
+  return std::regex_replace(s, std::regex("\\t"), std::string(" "));
 }
 
 //// replace TAB-characters with space-characters
@@ -78,41 +78,41 @@ string replace_tab_with_space(const string &s)
 //}
 
 // Remove leading space characters from string
-string ltrim(const string &s)
+std::string ltrim(const std::string &s)
 {
-  return regex_replace(s, regex("^\\s+"), string(""));
+  return std::regex_replace(s, std::regex("^\\s+"), std::string(""));
 }
 
 // Remove trailing space characters from string
-string rtrim(const string &s)
+std::string rtrim(const std::string &s)
 {
-  return regex_replace(s, regex("\\s+$"), string(""));
+  return std::regex_replace(s, std::regex("\\s+$"), std::string(""));
 }
 
-string trim(const string &s)
+std::string trim(const std::string &s)
 {
   return ltrim(rtrim(s));
 }
 
 // Remove windows/dos-like line-feeds (carriage return)
-string remove_cr(const string &s)
+std::string remove_cr(const std::string &s)
 {
-  return regex_replace(s, regex("\\r$"), string(""));
+  return std::regex_replace(s, std::regex("\\r$"), std::string(""));
 }
 } // End namespace
 
 namespace MyBooks
 {
 
-Book::Book(const string &title, const string &author, const string &media_type, int read_year, const string &comment) :
+Book::Book(const std::string &title, const std::string &author, const std::string &media_type, int read_year, const std::string &comment) :
     _author(author), _title(title), _media_type(media_type), _read_year(read_year), _comment(comment)
 {
 }
 
-string Book::create_sql_insert_string()
+std::string Book::create_sql_insert_string()
 {
-  string statement = "INSERT INTO Books (Author, Title, Media_Type, Read_Year,Comment) VALUES (\"" + _author + "\", \"" + _title + "\",\"" + _media_type + "\",\""
-                     + to_string(_read_year) + "\",\"" + _comment + "\")";
+  std::string statement = "INSERT INTO Books (Author, Title, Media_Type, Read_Year,Comment) VALUES (\"" + _author + "\", \"" + _title + "\",\"" + _media_type + "\",\""
+                     + std::to_string(_read_year) + "\",\"" + _comment + "\")";
   // My database uses UFT-8 character encoding so;
   return iso_8859_1_to_utf8(statement);
 }
@@ -132,14 +132,14 @@ DataBase& DataBase::operator=(const DataBase &other)
   return *this;
 }
 
-int DataBase::open_database(const string &filename)
+int DataBase::open_database(const std::string &filename)
 {
   int status = sqlite3_open(filename.c_str(), &_DB);
   if (status != SQLITE_OK)
   {
-    cerr << "Error: Failed to open database " << filename << ":" << sqlite3_errmsg(_DB) << endl;
+    std::cerr << "Error: Failed to open database " << filename << ":" << sqlite3_errmsg(_DB) << std::endl;
     if (!_DB)
-      cerr << "Maybe an out of memory issue." << endl;
+      std::cerr << "Maybe an out of memory issue." << std::endl;
     return status;
   }
   return status;
@@ -149,34 +149,34 @@ void DataBase::close_database()
 {
   int status = sqlite3_close(_DB);
   if (status != SQLITE_OK)
-    cerr << "Error: Failed to close database " << sqlite3_errmsg(_DB) << endl;
+    std::cerr << "Error: Failed to close database " << sqlite3_errmsg(_DB) << std::endl;
 }
 
 int DataBase::create_table_Books()
 {
-  string statement = string("create table if not exists \"Books\" ") + "(\"Author\" text not null," + "\"Title\" text not null," + "\"Media_Type\" text not null,"
+  std::string statement = std::string("create table if not exists \"Books\" ") + "(\"Author\" text not null," + "\"Title\" text not null," + "\"Media_Type\" text not null,"
                      + "\"Read_Year\" integer not null," + "\"Comment\"   text, " + "primary key(\"Author\",\"Title\",\"Read_Year\")" + ")";
-  string errmsg = execute_sql_insert_or_create(statement);
+  std::string errmsg = execute_sql_insert_or_create(statement);
   if (errmsg != "")
   {
-    cerr << statement << endl;
-    cerr << errmsg << endl;
+    std::cerr << statement << std::endl;
+    std::cerr << errmsg << std::endl;
     return -1;
   }
   return 0;
 }
 
-int DataBase::fill_db_from_file(const string &filename)
+int DataBase::fill_db_from_file(const std::string &filename)
 {
-  cout << create_table_Books() << endl;
-  ifstream ifs(filename);
+  std::cout << create_table_Books() << std::endl;
+  std::ifstream ifs(filename);
   if (!ifs.is_open())
   {
-    cerr << "Error: Failed to open " << filename << endl;
+    std::cerr << "Error: Failed to open " << filename << std::endl;
     return -1;
   }
   int read_year = 0;
-  string s;
+  std::string s;
   while (std::getline(ifs, s))
   {
     // Remove windows/dos-like line feeds (carriage return)
@@ -192,8 +192,8 @@ int DataBase::fill_db_from_file(const string &filename)
     if (s[0] == '-')
       continue;
     Book book("Unknown", "Unknown", "bok", 0, "");
-    istringstream iss(s);
-    string str;
+    std::istringstream iss(s);
+    std::string str;
     if (getline(iss, str, ','))
     {
       if (str[0] == '2')
@@ -213,46 +213,46 @@ int DataBase::fill_db_from_file(const string &filename)
     book.set_read_year(read_year);
     if (getline(iss, str, ','))
       book.set_comment(trim(str));
-    string statement = book.create_sql_insert_string();
-    string errmsg = execute_sql_insert_or_create(statement);
+    std::string statement = book.create_sql_insert_string();
+    std::string errmsg = execute_sql_insert_or_create(statement);
     if (errmsg != "")
     {
-      cerr << statement << endl;
-      cerr << errmsg << endl;
+      std::cerr << statement << std::endl;
+      std::cerr << errmsg << std::endl;
     }
   }
   ifs.close();
   return 0;
 }
 
-int DataBase::save_db_to_file(const string &filename)
+int DataBase::save_db_to_file(const std::string &filename)
 {
-  ofstream ofs(filename);
+  std::ofstream ofs(filename);
   if (!ofs.is_open())
   {
-    cerr << "Error: Failed to open " << filename << endl;
+    std::cerr << "Error: Failed to open " << filename << std::endl;
     return -1;
   }
-  string sql_select_statement = "select * from Books order by Read_Year";
-  vector<vector<string>> result;
-  string errmsg = execute_sql_select(sql_select_statement, result);
+  std::string sql_select_statement = "select * from Books order by Read_Year";
+  std::vector<std::vector<std::string>> result;
+  std::string errmsg = execute_sql_select(sql_select_statement, result);
   if (!errmsg.empty())
   {
-    cerr << sql_select_statement << endl;
-    cerr << errmsg << endl;
+    std::cerr << sql_select_statement << std::endl;
+    std::cerr << errmsg << std::endl;
   }
-  string current_year = "0";
-  ofs << iso_8859_1_to_utf8("-- Böcker som jag minns att jag läst eller blivit läst för som liten:") << endl << endl;
-  for (vector<string> vs : result)
+  std::string current_year = "0";
+  ofs << iso_8859_1_to_utf8("-- Böcker som jag minns att jag läst eller blivit läst för som liten:") << std::endl << std::endl;
+  for (std::vector<std::string> vs : result)
   {
     // Read_Year is in position 3 of the string vector
     if (vs[3] != current_year)
     {
       current_year = vs[3];
-      ofs << endl << current_year << endl << "----" << endl;
+      ofs << std::endl << current_year << std::endl << "----" << std::endl;
     }
     bool first_col = true;
-    for (string s : vs)
+    for (std::string s : vs)
     {
       if (regexp_match(s, "^[0-9]+$") && s == current_year)
       {
@@ -265,25 +265,25 @@ int DataBase::save_db_to_file(const string &filename)
         first_col = false;
       ofs << s;
     }
-    ofs << endl;
+    ofs << std::endl;
   }
   ofs.close();
   return 0;
 }
 
-string DataBase::create_sql_select_statement(const string &title, const string &author, bool read_year_on, const string &read_year)
+std::string DataBase::create_sql_select_statement(const std::string &title, const std::string &author, bool read_year_on, const std::string &read_year)
 {
   // Transform to UTF-8 everything except title and author,
   // which are already in UTF-8 encoding when they come from
   // the gtk-GUI.
-  string sql = iso_8859_1_to_utf8("select * from Books where Title like \"%") + title + iso_8859_1_to_utf8("%\" and Author like \"%") + author + iso_8859_1_to_utf8("%\"");
+  std::string sql = iso_8859_1_to_utf8("select * from Books where Title like \"%") + title + iso_8859_1_to_utf8("%\" and Author like \"%") + author + iso_8859_1_to_utf8("%\"");
   if (read_year_on)
     sql.append(iso_8859_1_to_utf8(" and Read_Year = \"") + read_year + iso_8859_1_to_utf8("\""));
   return sql;
 
 }
 
-string DataBase::execute_sql_insert_or_create(const string &statement)
+std::string DataBase::execute_sql_insert_or_create(const std::string &statement)
 {
   sqlite3_stmt *stmt;
   int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, NULL);
@@ -303,7 +303,7 @@ string DataBase::execute_sql_insert_or_create(const string &statement)
   return "";
 }
 
-string DataBase::execute_sql_select(const string &statement, vector<vector<string>> &result)
+std::string DataBase::execute_sql_select(const std::string &statement, std::vector<std::vector<std::string>> &result)
 {
   sqlite3_stmt *stmt;
   int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, NULL);
@@ -315,7 +315,7 @@ string DataBase::execute_sql_select(const string &statement, vector<vector<strin
 
   while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
   {
-    vector<string> row;
+    std::vector<std::string> row;
     int n_cols = sqlite3_column_count(stmt);
     for (int i = 0; i < n_cols; i++)
     {
