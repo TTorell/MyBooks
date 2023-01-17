@@ -16,6 +16,54 @@
 namespace MyBooks
 {
 
+template<typename T, typename T_base_object>
+void signal_activate_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_object& object, const std::string& widget_name, void (T_base_object::*func)())
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->signal_activate().connect(sigc::mem_fun(object, func));
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
+template<typename T, typename T_base_object>
+void signal_clicked_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_object& object, const std::string& widget_name, void (T_base_object::*func)())
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->signal_clicked().connect(sigc::mem_fun(object, func));
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
+template<typename T, typename T_base_object>
+void signal_changed_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_object& object, const std::string& widget_name, void (T_base_object::*func)())
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->signal_changed().connect(sigc::mem_fun(object, func));
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
+template<typename T, typename T_base_object>
+void signal_toggled_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_object& object, const std::string& widget_name, void (T_base_object::*func)())
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->signal_toggled().connect(sigc::mem_fun(object, func));
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
 template<typename T>
 void set_text(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& widget_name, const std::string& text)
 {
@@ -84,22 +132,15 @@ enum class Media_type
   Soundbook
 };
 
-class NewBookDialog
+class NewBookDialog : public Gtk::Dialog
 {
   private:
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::Dialog* _dialog;
     Book _book;
-    std::string _title;
-    std::string _author;
-    Media_type _media_type;
-    std::string _read_year;
-    std::string _comment;
-
+    DataBase& _DB;
   public:
-    NewBookDialog(Glib::RefPtr<Gtk::Builder> builder);
+    NewBookDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& glade_builder, DataBase& db);
     ~NewBookDialog();
-    void show();
     void reset();
     void on_title2_changed();
     void on_author2_changed();
@@ -116,8 +157,7 @@ class NewBookDialog
 class Gui: public Gtk::Window
 {
   public:
-    Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);
-    Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade, DataBase& DB, const std::string& logfile);
+    Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade, DataBase& db, const std::string& logfile);
     virtual ~Gui();
     std::string choose_database_dir();
 
@@ -126,12 +166,12 @@ class Gui: public Gtk::Window
     //member variables:
     std::ofstream _logofs;
     Glib::RefPtr<Gtk::Builder> _builder;
-    NewBookDialog _new_book_dialog;
+    NewBookDialog* _new_book_dialog = nullptr;
     std::string _title;
     std::string _author;
     bool _read_year_on;
     std::string _read_year;
-    DataBase _DB;
+    DataBase& _DB;
 
     //Signal handlers:
     void on_exit_activated();

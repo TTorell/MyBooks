@@ -1,4 +1,5 @@
--- Böcker som jag minns att jag läst eller blivit läst för som liten:
+-- Böcker som jag minns att jag blivit läst för som liten,
+eller läst som ung:
 
 Astrid Lindgren, diverse Pippi Långstrump, bok
 Astrid Lindgren, diverse Emil, bok
@@ -285,6 +286,8 @@ Ed Mcbain, Fat Ollies bok, bok
 Arthur C. Clarke, A fall of moondust, bok
 Michail Botvinnik, Botvinnik-Smyslov 1954-1957-1958, bok
 
+-- Lucka --
+
 2018
 ----
 John E. Lewis, The mammut book of native americans, bok
@@ -301,6 +304,8 @@ Peter Englund, Den oövervinnerlige, bok
 Jim Holt, When Einstein walked with Gödel, bok, ej klar
 P3 historia och Historiepoden, diverse podavsnitt, podar
 Tajik Rashid, Make your own neural network, bok
+
+-- Lucka --
 
 2020
 ----
@@ -348,3 +353,19 @@ Petter Landell, De nordamerikanska indianerna och den europeiska kolonisationen,
 Jörgen Tranberg, Universums kraftfält - meditation, ljudbok, 2:a
 Bo Carpelan, Vandrande skugga, bok, 5:a
 Håkan Nesser, Schack under vulkanen, ljudbok, 3:a
+-- Klinikboken --
+
+2022
+----
+Håkan Nesser, Schack under vulkanen, ljudbok, 3:a
+Kerstin Ekman, Händelser vid vatten, Ljudbok, Bra 5:a
+Kerstin Ekman, Löpa varg, Ljudbok, Bra 4.5
+W. Michal Farmer, Geronimo - Prisoner of lies, Bok, Mycket läsvärd
+Magnus Västerbro, Svälten, Ljudbok, Mycket läsvärd
+Nikls Natt O  Dag, 1795, Ljudbok, Bra 4:a
+Ola Västerbro, Tyrannens tid, Ljudbok, Om Karl debń 12:es tid. Himla bra
+
+2023
+----
+S. M. Barrett, Geronimo -  The True Story of Americas Most Ferocius Warriror , Bok, Mycket läsvärd. Geronimos egenhändigt berättade historia
+Ulf Danielsson, Världen Själv, Bok, Populärvetenskap 4.5

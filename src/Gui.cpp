@@ -7,6 +7,9 @@
 
 #include "Gui.hpp"
 #include <chrono>
+
+using namespace std::string_literals;
+
 namespace
 {
 
@@ -17,73 +20,38 @@ std::string get_current_year()
   return std::to_string(static_cast<int>(1970 + (hours / (24.0 * 365.0)))); //approximately
 }
 
+auto internal_MyBooks_tektfile = "/home/torsten/eclipse-workspace/src/MyBooks.txt"s;
+
 }
 
 namespace MyBooks
 {
 
-Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
-    Gtk::Window(cobject), _builder(builder), _new_book_dialog(_builder), _title(""), _author(""), _read_year_on(false)
+// The first two parameters are mandatory in a constructor that will be called
+// from Gtk::Builder::get_widget_derived().
+// Additional parameters, if any, correspond to additional arguments in the call
+// to Gtk::Builder::get_widget_derived().
+Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, DataBase& db, const std::string& logfile) :
+    Gtk::Window(cobject), _builder(builder), _new_book_dialog(nullptr), _title(""), _author(""), _read_year_on(false), _DB(db)
 {
+  builder->get_widget_derived("newbookdialog", _new_book_dialog, _DB);
+  _logofs.open(logfile);
 
   // connect signals to callbacks
+  Gtk::MenuItem* p1 = nullptr;
+  Gtk::Button* p2 = nullptr;
+  Gtk::Entry* p3 = nullptr;
+  Gtk::SpinButton* p4 = nullptr;
+  signal_activate_connect(p1, _builder, *this, "newbookmenuitem", &Gui::on_newbookmenuitem_activated);
+  signal_activate_connect(p1, _builder, *this, "exit", &Gui::on_exit_activated);
+  signal_activate_connect(p1, _builder, *this, "savetofilemenuitem", &Gui::on_savetofilemenuitem_activated);
+  signal_clicked_connect(p2, _builder, *this, "searchbutton", &Gui::on_searchbutton_clicked);
+  signal_changed_connect(p3, _builder, *this, "title", &Gui::on_title_changed);
+  signal_changed_connect(p3, _builder, *this, "author", &Gui::on_author_changed);
+  signal_clicked_connect(p2, _builder, *this, "yearcheckbutton", &Gui::on_yearcheckbutton_toggled);
+  signal_changed_connect(p4, _builder, *this, "yearspinbutton", &Gui::on_yearspinbutton_change_value);
 
-  Gtk::MenuItem* pNewBook = nullptr;
-  _builder->get_widget("newbookmenuitem", pNewBook);
-  if (pNewBook)
-  {
-    pNewBook->signal_activate().connect(sigc::mem_fun(*this, &Gui::on_newbookmenuitem_activated));
-  }
-
-  Gtk::MenuItem* pExit = nullptr;
-  _builder->get_widget("exit", pExit);
-  if (pExit)
-  {
-    pExit->signal_activate().connect(sigc::mem_fun(*this, &Gui::on_exit_activated));
-  }
-
-  Gtk::MenuItem* pSaveDBToFile = nullptr;
-  _builder->get_widget("savetofilemenuitem", pSaveDBToFile);
-  if (pSaveDBToFile)
-  {
-    pSaveDBToFile->signal_activate().connect(sigc::mem_fun(*this, &Gui::on_savetofilemenuitem_activated));
-  }
-
-  Gtk::Button* pButton;
-  _builder->get_widget("searchbutton", pButton);
-  if (pButton)
-  {
-    pButton->signal_clicked().connect(sigc::mem_fun(*this, &Gui::on_searchbutton_clicked));
-  }
-
-  Gtk::Entry* pEntry;
-  _builder->get_widget("title", pEntry);
-  if (pEntry)
-  {
-    pEntry->signal_changed().connect(sigc::mem_fun(*this, &Gui::on_title_changed));
-  }
-
-  _builder->get_widget("author", pEntry);
-  if (pEntry)
-  {
-    pEntry->signal_changed().connect(sigc::mem_fun(*this, &Gui::on_author_changed));
-  }
-
-  Gtk::CheckButton* pCheckButton;
-  _builder->get_widget("yearcheckbutton", pCheckButton);
-  if (pCheckButton)
-  {
-    pCheckButton->signal_clicked().connect(sigc::mem_fun(*this, &Gui::on_yearcheckbutton_toggled));
-  }
-
-  Gtk::SpinButton* pSpinButton;
-  _builder->get_widget("yearspinbutton", pSpinButton);
-  if (pSpinButton)
-  {
-    _read_year = pSpinButton->get_text();
-    pSpinButton->signal_changed().connect(sigc::mem_fun(*this, &Gui::on_yearspinbutton_change_value));
-  }
-  // initiate TreView and its model
+  // initiate TreeView and its model
   _refTreeModel = Gtk::TreeStore::create(_columns);
   _builder->get_widget("treeview", _pTreeView);
   _pTreeView->set_model(_refTreeModel);
@@ -106,16 +74,10 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
   }
 }
 
-// The first two parameters are mandatory in a constructor that will be called
-// from Gtk::Builder::get_widget_derived().
-// Additional parameters, if any, correspond to additional arguments in the call
-// to Gtk::Builder::get_widget_derived().
-Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, DataBase& db, const std::string& logfile) :
-    Gui(cobject, builder)
-{
-  _DB = db;
-  _logofs.open(logfile);
-}
+//Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, DataBase& db, const std::string& logfile) :
+//    Gui(cobject, builder)
+//{
+//}
 
 Gui::~Gui()
 {
@@ -192,8 +154,8 @@ std::string Gui::choose_database_dir()
 
 void Gui::on_newbookmenuitem_activated()
 {
-  _new_book_dialog.reset();
-  _new_book_dialog.show();
+  _new_book_dialog->reset();
+  _new_book_dialog->show();
 }
 
 void Gui::on_savetofilemenuitem_activated()
@@ -201,11 +163,12 @@ void Gui::on_savetofilemenuitem_activated()
   auto dialog = new Gtk::FileChooserDialog("Please choose a file", Gtk::FILE_CHOOSER_ACTION_SAVE);
   dialog->set_title("Save to file:");
   dialog->set_transient_for(*this);
-//dialog->set_modal(true);
+  //dialog->set_modal(true);
   dialog->signal_response().connect(sigc::bind(sigc::mem_fun(*this, &Gui::on_filedialog_response), dialog));
   dialog->set_current_folder("/home/torsten/SQlite");
   dialog->set_current_name("MyBooks.txt");
-//Add response buttons to the dialog:
+
+  //Add response buttons to the dialog:
   dialog->add_button("cancel", Gtk::RESPONSE_CANCEL);
   dialog->add_button("save", Gtk::RESPONSE_OK);
 
@@ -228,7 +191,7 @@ void Gui::on_savetofilemenuitem_activated()
   filter_any->add_pattern("*");
   dialog->add_filter(filter_any);
 
-//Show the dialog and wait for a user response:
+  //Show the dialog and wait for a user response:
   dialog->show();
 }
 
@@ -304,67 +267,32 @@ void Gui::on_yearspinbutton_change_value()
   _read_year = get_text(p, _builder, "yearspinbutton");
 }
 
-NewBookDialog::NewBookDialog(Glib::RefPtr<Gtk::Builder> builder) :
-    _builder(builder)
+NewBookDialog::NewBookDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& glade_builder, DataBase& db) :
+    Gtk::Dialog(cobject),
+    _builder(glade_builder),
+    _DB(db)
 {
-  _builder->get_widget("newbookdialog", _dialog);
-  _dialog->set_title("Insert a new book:");
-  _dialog->set_modal(true);
-  _dialog->signal_response().connect(sigc::bind(sigc::mem_fun(*this, &NewBookDialog::on_newbookdialog_response), _dialog));
+  Gtk::RadioButton* p1 = nullptr;
+  Gtk::Entry* p2 = nullptr;
+  Gtk::SpinButton* p3 = nullptr;
+  set_title("Insert a new book:");
+  set_modal(true);
+  signal_response().connect(sigc::bind(sigc::mem_fun(*this, &NewBookDialog::on_newbookdialog_response), this));
   //Add response buttons to the dialog:
-  _dialog->add_button("cancel", Gtk::RESPONSE_CANCEL);
-  _dialog->add_button("save", Gtk::RESPONSE_OK);
-
-  Gtk::RadioButton* pButton;
-  _builder->get_widget("bookradiobutton", pButton);
-  if (pButton)
-  {
-    pButton->signal_toggled().connect(sigc::mem_fun(*this, &NewBookDialog::on_bookradiobutton_toggled));
-  }
-  _builder->get_widget("soundbookradiobutton", pButton);
-  if (pButton)
-  {
-    pButton->signal_toggled().connect(sigc::mem_fun(*this, &NewBookDialog::on_soundbookradiobutton_toggled));
-  }
-
-  Gtk::Entry* pEntry;
-  _builder->get_widget("title2", pEntry);
-  if (pEntry)
-  {
-    pEntry->signal_changed().connect(sigc::mem_fun(*this, &NewBookDialog::on_title2_changed));
-  }
-
-  _builder->get_widget("author2", pEntry);
-  if (pEntry)
-  {
-    pEntry->signal_changed().connect(sigc::mem_fun(*this, &NewBookDialog::on_author2_changed));
-  }
-
-  Gtk::SpinButton* pSpinButton;
-  _builder->get_widget("yearspinbutton2", pSpinButton);
-  if (pSpinButton)
-  {
-    _read_year = pSpinButton->get_text();
-    pSpinButton->signal_changed().connect(sigc::mem_fun(*this, &NewBookDialog::on_yearspinbutton2_change_value));
-  }
-
-  _builder->get_widget("comment2", pEntry);
-  if (pEntry)
-  {
-    pEntry->signal_changed().connect(sigc::mem_fun(*this, &NewBookDialog::on_comment2_changed));
-  }
+  add_button("cancel", Gtk::RESPONSE_CANCEL);
+  add_button("save", Gtk::RESPONSE_OK);
+  signal_toggled_connect(p1,_builder, *this, "bookradiobutton", &NewBookDialog::on_bookradiobutton_toggled);
+  signal_toggled_connect(p1,_builder, *this, "soundbookradiobutton", &NewBookDialog::on_soundbookradiobutton_toggled);
+  signal_changed_connect(p2,_builder, *this, "title2", &NewBookDialog::on_title2_changed);
+  signal_changed_connect(p2,_builder, *this, "author2", &NewBookDialog::on_author2_changed);
+  signal_changed_connect(p3,_builder, *this, "yearspinbutton2", &NewBookDialog::on_yearspinbutton2_change_value);
+  signal_changed_connect(p2,_builder, *this, "comment2", &NewBookDialog::on_comment2_changed);
 }
 
 NewBookDialog::~NewBookDialog()
 {
-  delete _dialog;
-  _dialog = nullptr;
 }
 
-void NewBookDialog::show()
-{
-  _dialog->show();
-}
 
 void NewBookDialog::reset()
 {
@@ -374,7 +302,7 @@ void NewBookDialog::reset()
   Gtk::RadioButton* p3 = nullptr;
   _book.set_title("");
   _book.set_author("");
-  _book.set_media_type("Media_type::Book");
+  _book.set_media_type("Bok"s);
   _book.set_read_year(std::stoi(get_current_year()));
   _book.set_comment("");
   set_text(p1, _builder, "title2", "");
@@ -393,9 +321,16 @@ void NewBookDialog::on_newbookdialog_response(int response_id, Gtk::Dialog* dial
   {
     case Gtk::RESPONSE_OK:
     {
-//      //Notice that this is a std::string, not a Glib::ustring.
-//      auto filename = dialog->get_file()->get_path();
-//      _DB.save_db_to_file(filename);
+      std::cout << _book << std::endl;
+      std::string error_msg = _DB.execute_sql_insert_or_create(_book.create_sql_insert_string());
+      if (!error_msg.empty())
+      {
+         Gtk::Label* p =nullptr;
+         set_text(p, _builder,"sqlerrorlabel", "");
+         set_text(p, _builder,"sqlerrorlabel", error_msg);
+         return;
+      }
+      _DB.save_db_to_file(internal_MyBooks_tektfile);
       break;
     }
     case Gtk::RESPONSE_CANCEL:
@@ -429,7 +364,11 @@ void NewBookDialog::on_yearspinbutton2_change_value()
 {
   std::cout << "on_yearspinbutton2_change_value" << std::endl;
   Gtk::SpinButton* p = nullptr;
-  _book.set_read_year((std::stoi(get_text(p, _builder, "yearspinbutton2"))));
+  std::string s = get_text(p, _builder, "yearspinbutton2");
+  if (s.empty())
+    _book.set_read_year(0);
+  else
+   _book.set_read_year(std::stoi(s));
 }
 
 
@@ -437,14 +376,14 @@ void NewBookDialog::on_bookradiobutton_toggled()
 {
   std::cout << "on_bookradiobutton_toggled" << std::endl;
   Gtk::RadioButton* p = nullptr;
-  _book.set_media_type(get_active(p, _builder, "bookradiobutton") ? "Media_type::Book" : "Media_type::Soundbook");
+  _book.set_media_type(get_active(p, _builder, "bookradiobutton") ? "Bok" : "Ljudbok");
 }
 
 void NewBookDialog::on_soundbookradiobutton_toggled()
 {
   std::cout << "on_soundbookradiobutton_toggled" << std::endl;
   Gtk::RadioButton* p = nullptr;
-  _book.set_media_type(get_active(p, _builder, "soundbookradiobutton") ? "Media_type::Soundbook" : "Media_type::Book");
+  _book.set_media_type(get_active(p, _builder, "soundbookradiobutton") ? "Ljudbok" : "Bok");
 }
 
 void NewBookDialog::on_comment2_changed()

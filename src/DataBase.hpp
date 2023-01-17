@@ -29,9 +29,11 @@ class Book
     int _read_year;
     std::string _comment;
 
+    friend std::ostream& operator <<(std::ostream& os, const Book& book);
+
   public:
     Book(const std::string& title = "unknown", const std::string& author = "unknown", const std::string& media_type = "book", int read_year = 0, const std::string& comment = "");
-    std::string create_sql_insert_string();
+    std::string create_sql_insert_string() const;
 
     void set_author(const std::string& author)
     {

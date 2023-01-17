@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
   //std::cout << CLOCKS_PER_SEC << std::endl;
 
   // Fill DB from text file.
-  db.fill_db_from_file(books_textfile);
+  //db.fill_db_from_file(books_textfile);
 
   // Create gui.
   auto app = Gtk::Application::create(argc, argv, "org.basic.glade");
