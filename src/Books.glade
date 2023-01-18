@@ -134,6 +134,7 @@ with Glade and SQLITE-datases.</property>
             <property name="width-request">100</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
+            <property name="sensitive">False</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">My books and soundbooks</property>
             <property name="justify">center</property>
@@ -161,7 +162,8 @@ with Glade and SQLITE-datases.</property>
             <child>
               <object class="GtkImage" id="search">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="can-focus">True</property>
+                <property name="has-focus">True</property>
                 <property name="tooltip-text" translatable="yes">Search in the database</property>
                 <property name="pixel-size">48</property>
                 <property name="icon-name">edit-find</property>
@@ -237,11 +239,10 @@ with Glade and SQLITE-datases.</property>
           <object class="GtkSpinButton" id="yearspinbutton">
             <property name="width-request">148</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="has-focus">True</property>
-            <property name="is-focus">True</property>
+            <property name="can-focus">False</property>
             <property name="tooltip-text" translatable="yes">Year when the book was read</property>
             <property name="margin-bottom">2</property>
+            <property name="editable">False</property>
             <property name="max-width-chars">10</property>
             <property name="caps-lock-warning">False</property>
             <property name="primary-icon-stock">gtk-edit</property>
@@ -265,7 +266,7 @@ with Glade and SQLITE-datases.</property>
           <object class="GtkCheckButton" id="yearcheckbutton">
             <property name="label" translatable="yes">Read year</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="can-focus">False</property>
             <property name="receives-default">False</property>
             <property name="draw-indicator">True</property>
             <signal name="toggled" handler="on_yearcheckbutton_toggled" swapped="no"/>
@@ -446,7 +447,6 @@ with Glade and SQLITE-datases.</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-bottom">32</property>
-            <property name="label" translatable="yes">label</property>
             <attributes>
               <attribute name="foreground" value="#a5a51d1d2d2d"/>
               <attribute name="background" value="#ffffffffffff"/>

@@ -8,6 +8,7 @@
 #include "DataBase.hpp"
 #include <cstring>
 #include <regex>
+#include <algorithm>
 
 using namespace std::string_literals;
 // File-private functions
@@ -100,6 +101,14 @@ std::string remove_cr(const std::string& s)
 {
   return std::regex_replace(s, std::regex("\\r$"), std::string(""));
 }
+
+bool is_positive_number(const std::string& s)
+{
+    if (s.empty())
+      return false;
+    return std::all_of(s.begin(), s.end(), ::isdigit);
+}
+
 } // End namespace
 
 namespace MyBooks
@@ -212,28 +221,30 @@ int DataBase::fill_db_from_file(const std::string& filename)
     // Comment line
     if (s[0] == '-')
       continue;
-    Book book("Unknown", "Unknown", "bok", 0, "");
+    Book book("Unknown"s, "Unknown"s, "bok"s, 0, ""s);
     std::istringstream iss(s);
-    std::string str;
-    if (getline(iss, str, ','))
+    std::string token;
+    if (getline(iss, token, ','))
     {
-      if (str[0] == '2')
+      // If the first token (or the whole line) is a number of four digits,
+      // we regard it as the start of a section for a new year.
+      if (is_positive_number(token) && token.size() == 4)
       {
-        read_year = stoi(str);
+        read_year = std::stoi(token);
         continue;
       }
       else
-        book.set_author(trim(str));
+        book.set_author(trim(token));
     }
-    if (getline(iss, str, ','))
+    if (getline(iss, token, ','))
     {
-      book.set_title(trim(str));
+      book.set_title(trim(token));
     }
-    if (getline(iss, str, ','))
-      book.set_media_type(trim(str));
+    if (getline(iss, token, ','))
+      book.set_media_type(trim(token));
     book.set_read_year(read_year);
-    if (getline(iss, str, ','))
-      book.set_comment(trim(str));
+    if (getline(iss, token, ','))
+      book.set_comment(trim(token));
     std::string statement = book.create_sql_insert_string();
     std::string errmsg = execute_sql_insert_or_create(statement);
     if (errmsg != "")
@@ -264,7 +275,7 @@ int DataBase::save_db_to_file(const std::string& filename)
   }
   std::string current_year = iso_8859_1_to_utf8("0");
   ofs << iso_8859_1_to_utf8("-- Böcker som jag minns att jag blivit läst för som liten,"s) << std::endl;
-  ofs << iso_8859_1_to_utf8("eller läst som ung:"s) << std::endl << std::endl;
+  ofs << iso_8859_1_to_utf8("-- eller läst som ung:"s) << std::endl << std::endl;
   for (std::vector<std::string> vs : result)
   {
     // Read_Year is in position 3 of the string vector
@@ -308,7 +319,7 @@ std::string DataBase::create_sql_select_statement(const std::string& title, cons
   // the gtk-GUI.
   std::string sql = iso_8859_1_to_utf8("select * from Books where Title like \"%"s) + title + iso_8859_1_to_utf8("%\" and Author like \"%"s) + author + iso_8859_1_to_utf8("%\""s);
   if (read_year_on)
-    sql.append(iso_8859_1_to_utf8(" and Read_Year = \""s) + read_year + iso_8859_1_to_utf8("\""s));
+    sql.append(iso_8859_1_to_utf8(" and Read_Year = \""s + read_year + "\""s));
   return sql;
 }
 

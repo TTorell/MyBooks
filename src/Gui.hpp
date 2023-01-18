@@ -90,6 +90,30 @@ std::string get_text(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string
 }
 
 template<typename T>
+void set_editable(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& widget_name, const bool value)
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->set_editable(value);
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
+template<typename T>
+void set_sensible(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& widget_name, const bool value)
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->set_sensible(value);
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
+template<typename T>
 void set_value(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& widget_name, const double value)
 {
   builder->get_widget(widget_name, p);

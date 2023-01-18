@@ -36,6 +36,8 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Dat
 {
   builder->get_widget_derived("newbookdialog", _new_book_dialog, _DB);
   _logofs.open(logfile);
+  Gtk::SpinButton* p = nullptr;
+  set_editable(p, _builder, "yearspinbutton", false);
 
   // connect signals to callbacks
   Gtk::MenuItem* p1 = nullptr;
@@ -73,11 +75,6 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Dat
     column->set_reorderable();
   }
 }
-
-//Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, DataBase& db, const std::string& logfile) :
-//    Gui(cobject, builder)
-//{
-//}
 
 Gui::~Gui()
 {
@@ -198,6 +195,7 @@ void Gui::on_savetofilemenuitem_activated()
 void Gui::on_searchbutton_clicked()
 {
   std::string statement = _DB.create_sql_select_statement(_title, _author, _read_year_on, _read_year);
+  statement.append(" order by Read_Year"s);
   std::vector<std::vector<std::string>> result;
   std::string errmsg = _DB.execute_sql_select(statement, result);
   if (errmsg != "")
@@ -245,20 +243,18 @@ void Gui::on_author_changed()
 
 void Gui::on_yearcheckbutton_toggled()
 {
-  Gtk::CheckButton* pButton;
-  _builder->get_widget("yearcheckbutton", pButton);
-  if (pButton)
+  Gtk::CheckButton* p = nullptr;
+  Gtk::SpinButton* p2 = nullptr;
+  _read_year = get_text(p2, _builder, "yearspinbutton");
+  _read_year_on = get_active(p, _builder, "yearcheckbutton");
+  if (_read_year_on)
   {
-    _read_year_on = pButton->get_active();
-    if (_read_year_on)
-    {
-      Gtk::SpinButton* pButton2;
-      _builder->get_widget("yearspinbutton", pButton2);
-      pButton2->set_editable();
-    }
+    set_editable(p2, _builder, "yearspinbutton", true);
   }
   else
-    std::cerr << "get_widget() yearcheckbutton failed" << std::endl;
+  {
+    set_editable(p2, _builder, "yearspinbutton", false);
+  }
 }
 
 void Gui::on_yearspinbutton_change_value()
@@ -268,9 +264,7 @@ void Gui::on_yearspinbutton_change_value()
 }
 
 NewBookDialog::NewBookDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& glade_builder, DataBase& db) :
-    Gtk::Dialog(cobject),
-    _builder(glade_builder),
-    _DB(db)
+    Gtk::Dialog(cobject), _builder(glade_builder), _DB(db)
 {
   Gtk::RadioButton* p1 = nullptr;
   Gtk::Entry* p2 = nullptr;
@@ -278,21 +272,20 @@ NewBookDialog::NewBookDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
   set_title("Insert a new book:");
   set_modal(true);
   signal_response().connect(sigc::bind(sigc::mem_fun(*this, &NewBookDialog::on_newbookdialog_response), this));
-  //Add response buttons to the dialog:
+//Add response buttons to the dialog:
   add_button("cancel", Gtk::RESPONSE_CANCEL);
   add_button("save", Gtk::RESPONSE_OK);
-  signal_toggled_connect(p1,_builder, *this, "bookradiobutton", &NewBookDialog::on_bookradiobutton_toggled);
-  signal_toggled_connect(p1,_builder, *this, "soundbookradiobutton", &NewBookDialog::on_soundbookradiobutton_toggled);
-  signal_changed_connect(p2,_builder, *this, "title2", &NewBookDialog::on_title2_changed);
-  signal_changed_connect(p2,_builder, *this, "author2", &NewBookDialog::on_author2_changed);
-  signal_changed_connect(p3,_builder, *this, "yearspinbutton2", &NewBookDialog::on_yearspinbutton2_change_value);
-  signal_changed_connect(p2,_builder, *this, "comment2", &NewBookDialog::on_comment2_changed);
+  signal_toggled_connect(p1, _builder, *this, "bookradiobutton", &NewBookDialog::on_bookradiobutton_toggled);
+  signal_toggled_connect(p1, _builder, *this, "soundbookradiobutton", &NewBookDialog::on_soundbookradiobutton_toggled);
+  signal_changed_connect(p2, _builder, *this, "title2", &NewBookDialog::on_title2_changed);
+  signal_changed_connect(p2, _builder, *this, "author2", &NewBookDialog::on_author2_changed);
+  signal_changed_connect(p3, _builder, *this, "yearspinbutton2", &NewBookDialog::on_yearspinbutton2_change_value);
+  signal_changed_connect(p2, _builder, *this, "comment2", &NewBookDialog::on_comment2_changed);
 }
 
 NewBookDialog::~NewBookDialog()
 {
 }
-
 
 void NewBookDialog::reset()
 {
@@ -316,7 +309,7 @@ void NewBookDialog::reset()
 
 void NewBookDialog::on_newbookdialog_response(int response_id, Gtk::Dialog* dialog)
 {
-  //Handle the response:
+//Handle the response:
   switch (response_id)
   {
     case Gtk::RESPONSE_OK:
@@ -325,10 +318,10 @@ void NewBookDialog::on_newbookdialog_response(int response_id, Gtk::Dialog* dial
       std::string error_msg = _DB.execute_sql_insert_or_create(_book.create_sql_insert_string());
       if (!error_msg.empty())
       {
-         Gtk::Label* p =nullptr;
-         set_text(p, _builder,"sqlerrorlabel", "");
-         set_text(p, _builder,"sqlerrorlabel", error_msg);
-         return;
+        Gtk::Label* p = nullptr;
+        set_text(p, _builder, "sqlerrorlabel", "");
+        set_text(p, _builder, "sqlerrorlabel", error_msg);
+        return;
       }
       _DB.save_db_to_file(internal_MyBooks_tektfile);
       break;
@@ -368,9 +361,8 @@ void NewBookDialog::on_yearspinbutton2_change_value()
   if (s.empty())
     _book.set_read_year(0);
   else
-   _book.set_read_year(std::stoi(s));
+    _book.set_read_year(std::stoi(s));
 }
-
 
 void NewBookDialog::on_bookradiobutton_toggled()
 {
@@ -392,6 +384,5 @@ void NewBookDialog::on_comment2_changed()
   Gtk::Entry* p = nullptr;
   _book.set_comment(get_text(p, _builder, "comment2"));
 }
-
 
 } /* namespace MyBooks */
