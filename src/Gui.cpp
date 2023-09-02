@@ -20,7 +20,7 @@ std::string get_current_year()
   return std::to_string(static_cast<int>(1970 + (hours / (24.0 * 365.0)))); //approximately
 }
 
-auto internal_MyBooks_tektfile = "/home/torsten/eclipse-workspace/src/MyBooks.txt"s;
+auto internal_MyBooks_tektfile = "/home/torsten/eclipse-workspace/MyBooks/src/MyBooks.txt"s;
 
 }
 
@@ -44,6 +44,7 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Dat
   Gtk::Button* p2 = nullptr;
   Gtk::Entry* p3 = nullptr;
   Gtk::SpinButton* p4 = nullptr;
+  //Gtk::TextView* p5 = nullptr;
   signal_activate_connect(p1, _builder, *this, "newbookmenuitem", &Gui::on_newbookmenuitem_activated);
   signal_activate_connect(p1, _builder, *this, "exit", &Gui::on_exit_activated);
   signal_activate_connect(p1, _builder, *this, "savetofilemenuitem", &Gui::on_savetofilemenuitem_activated);
@@ -52,6 +53,15 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Dat
   signal_changed_connect(p3, _builder, *this, "author", &Gui::on_author_changed);
   signal_clicked_connect(p2, _builder, *this, "yearcheckbutton", &Gui::on_yearcheckbutton_toggled);
   signal_changed_connect(p4, _builder, *this, "yearspinbutton", &Gui::on_yearspinbutton_change_value);
+//  builder->get_widget("treeview", p5);
+//  if (p5)
+//  {
+//    p5->signal_selection_get().connect(sigc::mem_fun(*this, &Gui::on_select_cursor_row));
+//  }
+//  else
+//    std::cerr << "get_widget() " << "treeview" << " failed" << std::endl;
+
+  //  signal_selected_connect(p5, _builder, *this, "treeview", &Gui::on_select_cursor_row);
 
   // initiate TreeView and its model
   _refTreeModel = Gtk::TreeStore::create(_columns);
@@ -261,6 +271,11 @@ void Gui::on_yearspinbutton_change_value()
 {
   Gtk::SpinButton* p = nullptr;
   _read_year = get_text(p, _builder, "yearspinbutton");
+}
+
+void Gui::on_select_cursor_row()
+{
+  std::cout << "on_select_cursor_row" << std::endl;
 }
 
 NewBookDialog::NewBookDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& glade_builder, DataBase& db) :

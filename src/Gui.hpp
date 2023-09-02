@@ -64,6 +64,18 @@ void signal_toggled_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_obj
     std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
 }
 
+template<typename T, typename T_base_object>
+void signal_selected_connect(T* p, Glib::RefPtr<Gtk::Builder> builder, T_base_object& object, const std::string& widget_name, void (T_base_object::*func)())
+{
+  builder->get_widget(widget_name, p);
+  if (p)
+  {
+    p->signal_selected().connect(sigc::mem_fun(object, func));
+  }
+  else
+    std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
+}
+
 template<typename T>
 void set_text(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& widget_name, const std::string& text)
 {
@@ -208,6 +220,7 @@ class Gui: public Gtk::Window
     void on_yearspinbutton_changed();
     void on_yearcheckbutton_toggled();
     void on_yearspinbutton_change_value();
+    void on_select_cursor_row();
 
     //Inner class: Tree model columns for TreeStore:
     class ModelColumns: public Gtk::TreeModel::ColumnRecord

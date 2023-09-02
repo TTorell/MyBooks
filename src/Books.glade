@@ -222,6 +222,9 @@ with Glade and SQLITE-datases.</property>
               <object class="GtkTreeView" id="treeview">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="activate-on-single-click">True</property>
+                <signal name="row-activated" handler="on_treeview_row_activated" swapped="no"/>
+                <signal name="select-cursor-row" handler="on_treeview_select_cursor_row" swapped="no"/>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection" id="select">
                     <signal name="changed" handler="on" swapped="no"/>
