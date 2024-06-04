@@ -20,11 +20,12 @@ namespace
 std::string iso_8859_1_to_utf8(const std::string& str)
 {
   std::string str_out;
-  for (uint8_t ch : str)
+  for (int8_t c : str)
   {
+    uint8_t ch = static_cast<uint8_t>(c);
     if (ch < 0x80)
     {
-      str_out.push_back(ch);
+      str_out.push_back(c);
     }
     else
     {
@@ -274,8 +275,8 @@ int DataBase::save_db_to_file(const std::string& filename)
     std::cerr << errmsg << std::endl;
   }
   std::string current_year = iso_8859_1_to_utf8("0");
-  ofs << iso_8859_1_to_utf8("-- Böcker som jag minns att jag blivit läst för som liten,"s) << std::endl;
-  ofs << iso_8859_1_to_utf8("-- eller läst som ung:"s) << std::endl << std::endl;
+  ofs << iso_8859_1_to_utf8("-- Bï¿½cker som jag minns att jag blivit lï¿½st fï¿½r som liten,"s) << std::endl;
+  ofs << iso_8859_1_to_utf8("-- eller lï¿½st som ung:"s) << std::endl << std::endl;
   for (std::vector<std::string> vs : result)
   {
     // Read_Year is in position 3 of the string vector
@@ -326,7 +327,7 @@ std::string DataBase::create_sql_select_statement(const std::string& title, cons
 std::string DataBase::execute_sql_insert_or_create(const std::string& statement)
 {
   sqlite3_stmt* stmt;
-  int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, NULL);
+  int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, nullptr);
   if (rc != SQLITE_OK)
   {
     sqlite3_finalize(stmt);
@@ -346,7 +347,7 @@ std::string DataBase::execute_sql_insert_or_create(const std::string& statement)
 std::string DataBase::execute_sql_select(const std::string& statement, std::vector<std::vector<std::string>>& result)
 {
   sqlite3_stmt* stmt;
-  int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, NULL);
+  int rc = sqlite3_prepare_v2(_DB, statement.c_str(), -1, &stmt, nullptr);
   if (rc != SQLITE_OK)
   {
     sqlite3_finalize(stmt);
@@ -359,8 +360,10 @@ std::string DataBase::execute_sql_select(const std::string& statement, std::vect
     int n_cols = sqlite3_column_count(stmt);
     for (int i = 0; i < n_cols; i++)
     {
-      const unsigned char* name = sqlite3_column_text(stmt, i);
-      row.push_back((char*) name);
+      std::basic_string<unsigned char> temp = sqlite3_column_text(stmt, i);
+      std::string name(temp.begin(), temp.end());
+
+      row.push_back(name);
     }
     result.push_back(row);
   }
@@ -373,4 +376,3 @@ std::string DataBase::execute_sql_select(const std::string& statement, std::vect
 }
 
 }/* end namespace MyBooks */
-

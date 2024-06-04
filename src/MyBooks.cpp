@@ -1,9 +1,10 @@
 /*
- * Books.cpp
+ * MyBooks.cpp
  *
  *  Created on: 5 june 2020
  *      Author: torsten
  */
+
 
 #include <sqlite3.h>
 #include <iostream>
@@ -14,7 +15,14 @@
 #include <string>
 #include <vector>
 #include <glib.h>
+#if defined (__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#endif
 #include <gtkmm.h>
+#if defined (__clang__)
+#pragma clang diagnostic pop
+#endif
 #include <filesystem>
 
 #include "Gui.hpp"
@@ -25,7 +33,6 @@ extern "C"
 }
 namespace fs = std::filesystem;
 
-using namespace MyBooks;
 
 int main(int argc, char* argv[])
 {
@@ -40,7 +47,7 @@ int main(int argc, char* argv[])
   // Create an SQlite directory in users home directory if it doesn't exist.
   // We'll put the database file there if we must create a new DB.
   char* val = getenv("HOME");
-  if (val == NULL)
+  if (val == nullptr)
   {
     std::cerr << "Couldn't read environment variable HOME." << std::endl;
     return -1;
@@ -53,7 +60,7 @@ int main(int argc, char* argv[])
       std::cerr << "Couldn't create database directory: " << db_dir << " " << error.message() << std::endl;
 
   // Create new, or open existing, database "MyBooks.db" in "$HOME/SQlite/".
-  DataBase db;
+  MyBooks::DataBase db;
   int status = db.open_database(db_dir / "MyBooks.db");
   if (status)
   {
@@ -97,7 +104,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  Gui* gui = NULL;
+  MyBooks::Gui* gui = NULL;
   builder->get_widget_derived("mainwindow", gui, db, logfile);
 
   if (gui)
@@ -110,5 +117,4 @@ int main(int argc, char* argv[])
   db.close_database();
 
   return 0;
-}
-;
+};

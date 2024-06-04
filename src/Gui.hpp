@@ -7,8 +7,15 @@
 
 #ifndef GUI_HPP_
 #define GUI_HPP_
-
+#if defined (__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#endif
 #include <gtkmm.h>
+#if defined (__clang__)
+#pragma clang diagnostic pop
+#endif
+
 #include <iostream>
 #include <string>
 #include "DataBase.hpp"

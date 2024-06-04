@@ -81,7 +81,7 @@ Gui::Gui(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Dat
   //finely control column drag and drop.
   for (unsigned int i = 0; i < _pTreeView->get_n_columns(); i++)
   {
-    auto column = _pTreeView->get_column(i);
+    auto column = _pTreeView->get_column(static_cast<int>(i));
     column->set_reorderable();
   }
 }

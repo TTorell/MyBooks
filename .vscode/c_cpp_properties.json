@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [],
+            "defines": [],
+            "compilerPath": "/usr/bin/g++"
+        }
+    ],
+    "version": 4
+}
