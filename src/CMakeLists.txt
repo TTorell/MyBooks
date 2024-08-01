@@ -56,8 +56,7 @@ cairo
 sigc-2.0
 gdk_pixbuf-2.0
 gobject-2.0
-glib-2.0
-pthread)
+glib-2.0)
 
 
 # To have a look at the CMake variables:

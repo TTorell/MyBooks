@@ -169,11 +169,6 @@ void set_active(T* p, Glib::RefPtr<Gtk::Builder> builder, const std::string& wid
     std::cerr << "get_widget() " << widget_name << " failed" << std::endl;
 }
 
-enum class Media_type
-{
-  Book,
-  Soundbook
-};
 
 class NewBookDialog : public Gtk::Dialog
 {
@@ -189,12 +184,13 @@ class NewBookDialog : public Gtk::Dialog
     void on_author2_changed();
     void on_yearspinbutton2_change_value();
     void on_comment2_changed();
-    void on_bookradiobutton_toggled();
-    void on_soundbookradiobutton_toggled();
+    void on_media_changed();
     void on_newbookdialog_response(int response_id, Gtk::Dialog* dialog);
     void on_yearspinbutton_changed();
-    void on_cancelbutton_clicked();
-    void on_insertbutton_clicked();
+    void on_cancelbutton2_clicked();
+    void on_savebutton2_clicked();
+    //void on_insertbutton_clicked();
+    void check_specified_set_savebutton();
 };
 
 class Gui: public Gtk::Window

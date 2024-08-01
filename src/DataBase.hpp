@@ -61,6 +61,12 @@ class Book
     }
     ;
 
+    bool check_fully_specified()
+    {
+        return this->_author != "unknown" && _author != "" &&
+               this->_title != "unknown" && this->_title != "";
+    }
+
 };
 
 class DataBase

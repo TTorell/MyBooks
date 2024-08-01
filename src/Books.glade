@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
+<!-- Generated with glade 3.38.1 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">1900</property>
     <property name="upper">2200</property>
-    <property name="value">2100</property>
+    <property name="value">2024</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -256,7 +256,6 @@ with Glade and SQLITE-datases.</property>
             <property name="snap-to-ticks">True</property>
             <property name="numeric">True</property>
             <property name="wrap">True</property>
-            <property name="value">2023</property>
             <signal name="change-value" handler="on_yearspinbutton_change_value" swapped="no"/>
             <signal name="value-changed" handler="on_yearspinbutton_value_changed" swapped="no"/>
           </object>
@@ -285,7 +284,7 @@ with Glade and SQLITE-datases.</property>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="lower">1900</property>
     <property name="upper">2200</property>
-    <property name="value">2023</property>
+    <property name="value">2024</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
     <signal name="changed" handler="on_adjustment2_changed" swapped="no"/>
@@ -307,10 +306,33 @@ with Glade and SQLITE-datases.</property>
             <property name="is-focus">True</property>
             <property name="layout-style">end</property>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="cancelbutton2">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="on_cancelbutton2_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="savebutton2">
+                <property name="label" translatable="yes">Save</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="on_savebutton2_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -373,7 +395,6 @@ with Glade and SQLITE-datases.</property>
             <property name="snap-to-ticks">True</property>
             <property name="numeric">True</property>
             <property name="wrap">True</property>
-            <property name="value">2023</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -419,6 +440,60 @@ with Glade and SQLITE-datases.</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="magazineradiobutton">
+                <property name="label" translatable="yes">Magazine</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="halign">start</property>
+                <property name="active">True</property>
+                <property name="draw-indicator">True</property>
+                <property name="group">bookradiobutton</property>
+                <signal name="toggled" handler="on_magazineradiobutton_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="dvdradiobutton">
+                <property name="label" translatable="yes">DVD</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="halign">start</property>
+                <property name="active">True</property>
+                <property name="draw-indicator">True</property>
+                <property name="group">bookradiobutton</property>
+                <signal name="toggled" handler="on_dvdradiobutton_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="otherradiobutton">
+                <property name="label" translatable="yes">Other	</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="halign">start</property>
+                <property name="active">True</property>
+                <property name="draw-indicator">True</property>
+                <property name="group">bookradiobutton</property>
+                <signal name="toggled" handler="on_otherradiobutton_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>
