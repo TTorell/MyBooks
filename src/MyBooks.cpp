@@ -3,8 +3,8 @@
  *
  *  Created on: 5 june 2020
  *      Author: torsten
+ *
  */
-
 
 #include <sqlite3.h>
 #include <iostream>
