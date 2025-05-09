@@ -324,9 +324,9 @@ void NewBookDialog::reset()
   std::cout << "year: " << get_text(p2, _builder, "yearspinbutton2") << std::endl;
   set_text(p1, _builder, "comment2", "");
   set_active(p3, _builder, "bookradiobutton", true);
-  //GtkButton* savebutt = nullptr;
-  //_builder->get_widget("savebutton2", savebutt);
-  //gtk_widget_set_sensitive(GTK_WIDGET(savebutt), false);
+  // GtkButton* savebutton = nullptr;
+  // _builder->get_widget("savebutton2", savebutton);
+  // gtk_widget_set_sensitive(GTK_WIDGET(savebutton), true);
 }
 
 void NewBookDialog::on_newbookdialog_response(int response_id, Gtk::Dialog* dialog)
@@ -370,7 +370,6 @@ void NewBookDialog::on_title2_changed()
   Gtk::Entry* p = nullptr;
   _book.set_title(get_text(p, _builder, "title2"));
 
-
 }
 
 void NewBookDialog::on_savebutton2_clicked()
@@ -399,9 +398,9 @@ void NewBookDialog::check_specified_set_savebutton()
 {
   if (_book.check_fully_specified())
   {
-    //GtkButton* savebutton2 = nullptr;
+    GtkButton* savebutton2 = nullptr;
     _builder->get_object("savebutton2");
-    //gtk_widget_set_sensitive(GTK_WIDGET(savebutton2), true);
+    gtk_widget_set_sensitive(GTK_WIDGET(savebutton2), true);
   }
 }
 
@@ -410,12 +409,12 @@ void NewBookDialog::on_author2_changed()
   std::cout << "on_author2_changed" << std::endl;
   Gtk::Entry* p = nullptr;
   _book.set_author(get_text(p, _builder, "author2"));
-  //GtkWidget* p1 = nullptr;
-  //_builder->get_widget("savebutton2", p1);
-  //if (_book.check_fully_specified())
-  //{
-  //  gtk_widget_set_sensitive(p1, true);
-  //}
+  // GtkWidget* p1 = nullptr;
+  // _builder->get_widget("savebutton2", p1);
+  // if (_book.check_fully_specified())
+  // {
+  //   gtk_widget_set_sensitive(p1, true);
+  // }
 }
 
 void NewBookDialog::on_yearspinbutton2_change_value()

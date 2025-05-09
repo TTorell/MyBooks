@@ -5,7 +5,7 @@
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">1900</property>
     <property name="upper">2200</property>
-    <property name="value">2024</property>
+    <property name="value">2025</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -118,7 +118,7 @@ the database</property>
 Mybooks was written by
 Torsten Torell in 2020,
 mostly  to learn  a little
-about GTK-programming 
+about GTK-programming
 with Glade and SQLITE-datases.</property>
                         <property name="use-underline">True</property>
                       </object>
@@ -214,7 +214,7 @@ with Glade and SQLITE-datases.</property>
             <property name="height-request">504</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="tooltip-text" translatable="yes">Content selected from the datbase</property>
+            <property name="tooltip-text" translatable="yes">Content selected from the database</property>
             <property name="hscrollbar-policy">never</property>
             <property name="shadow-type">in</property>
             <property name="propagate-natural-width">True</property>
@@ -284,7 +284,7 @@ with Glade and SQLITE-datases.</property>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="lower">1900</property>
     <property name="upper">2200</property>
-    <property name="value">2024</property>
+    <property name="value">2025</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
     <signal name="changed" handler="on_adjustment2_changed" swapped="no"/>
@@ -323,7 +323,6 @@ with Glade and SQLITE-datases.</property>
               <object class="GtkButton" id="savebutton2">
                 <property name="label" translatable="yes">Save</property>
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="on_savebutton2_clicked" swapped="no"/>
