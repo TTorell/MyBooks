@@ -349,7 +349,7 @@ with Glade and SQLITE-datases.</property>
             <property name="primary-icon-stock">gtk-edit</property>
             <property name="primary-icon-tooltip-text" translatable="yes">Enter book title</property>
             <property name="primary-icon-tooltip-markup" translatable="yes">Enter book title</property>
-            <property name="placeholder-text" translatable="yes">&lt;book title&gt;</property>
+            <property name="placeholder-text" translatable="yes">&lt;title&gt;</property>
             <signal name="changed" handler="on_title2_changed" swapped="no"/>
           </object>
           <packing>
